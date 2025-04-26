@@ -1,5 +1,6 @@
 package org.springframework.ai.mcp.sample.server;
 
+import io.modelcontextprotocol.server.transport.WebFluxSseServerTransportProvider;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.function.FunctionToolCallback;
@@ -16,8 +17,8 @@ public class McpServerApplication {
 	}
 
 	@Bean
-	public ToolCallbackProvider weatherTools(WeatherService weatherService) {
-		return MethodToolCallbackProvider.builder().toolObjects(weatherService).build();
+	public ToolCallbackProvider weatherTools(WeatherService weatherService, WeatherService2 weatherService2) {
+		return MethodToolCallbackProvider.builder().toolObjects(weatherService, weatherService2).build();
 	}
 
 	public record TextInput(String input) {
@@ -26,9 +27,17 @@ public class McpServerApplication {
 	@Bean
 	public ToolCallback toUpperCase() {
 		return FunctionToolCallback.builder("toUpperCase", (TextInput input) -> input.input().toUpperCase())
-			.inputType(TextInput.class)
-			.description("Put the text to upper case")
-			.build();
+				.inputType(TextInput.class)
+				.description("Put the text to upper case")
+				.build();
+	}
+
+	@Bean
+	public ToolCallback toUpperCase2() {
+		return FunctionToolCallback.builder("toUpperCase2", (TextInput input) -> input.input().toUpperCase())
+				.inputType(TextInput.class)
+				.description("Put the text to upper case")
+				.build();
 	}
 
 }
